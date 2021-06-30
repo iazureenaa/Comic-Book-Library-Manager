@@ -180,11 +180,13 @@ namespace ComicBookLibraryManagerWebApp.Controllers
                 ModelState.IsValidField("ComicBook.IssueNumber"))
             {
                 // Then make sure that the provided issue number is unique for the provided series.
-                // TODO Call method to check if the issue number is available for this comic book.
-                if (false)
+                if (_context.ComicBooks
+                    .Any(cb => cb.Id != comicBook.Id &&
+                    cb.SeriesId == comicBook.SeriesId &&
+                    cb.IssueNumber == comicBook.IssueNumber))
                 {
                     ModelState.AddModelError("ComicBook.IssueNumber",
-                        "The provided Issue Number has already been entered for the selected Series.");
+                     "The provided Issue Number has already been entered for the selected Series.");
                 }
             }
         }
