@@ -19,11 +19,7 @@ namespace ComicBookLibraryManagerWebApp.Controllers
     {
         public ActionResult Index()
         {
-            var comicBooks = Context.ComicBooks
-                    .Include(cb => cb.Series)
-                    .OrderBy(cb => cb.Series.Title)
-                    .ThenBy(cb => cb.IssueNumber)
-                    .ToList();
+            var comicBooks = Repository.GetComicBooks();
 
             return View(comicBooks);
         }
