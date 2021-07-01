@@ -20,10 +20,10 @@ namespace ComicBookShared.Data
         public IList<ComicBook> GetComicBooks()
         {
             return _context.ComicBooks
-                    .Include(cb => cb.Series)
-                    .OrderBy(cb => cb.Series.Title)
-                    .ThenBy(cb => cb.IssueNumber)
-                    .ToList();
+                .Include(cb => cb.Series)
+                .OrderBy(cb => cb.Series.Title)
+                .ThenBy(cb => cb.IssueNumber)
+                .ToList();
         }
 
         public ComicBook GetComicBook(int? id, bool includeRelatedEntities = true)
@@ -32,7 +32,7 @@ namespace ComicBookShared.Data
 
             if (includeRelatedEntities)
             {
-                _context.ComicBooks
+                comicBooks = comicBooks
                     .Include(cb => cb.Series)
                     .Include(cb => cb.Artists.Select(a => a.Artist))
                     .Include(cb => cb.Artists.Select(a => a.Role));
@@ -41,33 +41,12 @@ namespace ComicBookShared.Data
             return comicBooks
                 .Where(cb => cb.Id == id)
                 .SingleOrDefault();
-
-        }
-
-        public IList<Series> GetSeriesList()
-        {
-            return _context.Series
-                .OrderBy(s => s.Title)
-                .ToList();
-        }
-        public IList<Artist> GetArtists()
-        {
-            return _context.Artists
-                .OrderBy(a => a.Name)
-                .ToList();
-        }
-        public IList<Role> GetRoles()
-        {
-            return _context.Roles
-                .OrderBy(r => r.Name)
-                .ToList();
         }
 
         public void AddComicBook(ComicBook comicBook)
         {
             _context.ComicBooks.Add(comicBook);
             _context.SaveChanges();
-
         }
 
         public void UpdateComicBook(ComicBook comicBook)
@@ -83,29 +62,29 @@ namespace ComicBookShared.Data
             _context.SaveChanges();
         }
 
-        public bool ComicBookSeriesHasIssueNumber(int comicBookId,
-            int seriesId, int issueNumber)
+        public bool ComicBookSeriesHasIssueNumber(
+            int comicBookId, int seriesId, int issueNumber)
         {
             return _context.ComicBooks
-                    .Any(cb => cb.Id != comicBookId &&
-                    cb.SeriesId == seriesId &&
-                    cb.IssueNumber == issueNumber);
+                .Any(cb => cb.Id != comicBookId &&
+                           cb.SeriesId == seriesId &&
+                           cb.IssueNumber == issueNumber);
+        }
+
+        public ComicBookArtist GetComicBookArtist(int id)
+        {
+            return _context.ComicBookArtists
+                .Include(cba => cba.Artist)
+                .Include(cba => cba.Role)
+                .Include(cba => cba.ComicBook.Series)
+                .Where(cba => cba.Id == id)
+                .SingleOrDefault();
         }
 
         public void AddComicBookArtist(ComicBookArtist comicBookArtist)
         {
             _context.ComicBookArtists.Add(comicBookArtist);
             _context.SaveChanges();
-        }
-
-        public ComicBookArtist GetComicBookArtist(int id)
-        {
-                return _context.ComicBookArtists
-                    .Include(cba => cba.Artist)
-                    .Include(cba => cba.Role)
-                    .Include(cba => cba.ComicBook.Series)
-                    .Where(cba => cba.Id == (int)id)
-                    .SingleOrDefault();
         }
 
         public void DeleteComicBookArtist(int id)
@@ -115,13 +94,34 @@ namespace ComicBookShared.Data
             _context.SaveChanges();
         }
 
-        public bool ComicBookSeriesHasArtistRoleCombination(int comicBookId,
-           int artistId, int roleId)
+        public bool ComicBookHasArtistRoleCombination(
+            int comicBookId, int artistId, int roleId)
         {
             return _context.ComicBookArtists
-                    .Any(cba => cba.ComicBookId == comicBookId &&
-                    cba.ArtistId == artistId &&
-                    cba.RoleId == roleId);
+                .Any(cba => cba.ComicBookId == comicBookId &&
+                            cba.ArtistId == artistId &&
+                            cba.RoleId == roleId);
+        }
+
+        public IList<Series> GetSeriesList()
+        {
+            return _context.Series
+                .OrderBy(s => s.Title)
+                .ToList();
+        }
+
+        public IList<Artist> GetArtists()
+        {
+            return _context.Artists
+                .OrderBy(a => a.Name)
+                .ToList();
+        }
+
+        public IList<Role> GetRoles()
+        {
+            return _context.Roles
+                .OrderBy(r => r.Name)
+                .ToList();
         }
     }
 }

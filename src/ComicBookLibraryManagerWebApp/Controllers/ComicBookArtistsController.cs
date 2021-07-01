@@ -105,7 +105,7 @@ namespace ComicBookLibraryManagerWebApp.Controllers
                 // doesn't already exist for this comic book.
                 // TODO Call method to check if this artist and role combination
                 // already exists for this comic book.
-                if (Repository.ComicBookSeriesHasArtistRoleCombination(
+                if (Repository.ComicBookHasArtistRoleCombination(
                     viewModel.ComicBookId, viewModel.ArtistId, viewModel.RoleId))
                 {
                     ModelState.AddModelError("ArtistId",
