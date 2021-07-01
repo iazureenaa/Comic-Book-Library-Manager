@@ -1,4 +1,5 @@
 ﻿using ComicBookShared.Data;
+using ComicBookShared.Models;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
