@@ -39,7 +39,7 @@ namespace ComicBookLibraryManagerWebApp.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var comicBook = _comicBooksRepository.Get((int?) id);
+            var comicBook = _comicBooksRepository.Get((int) id);
 
             if (comicBook == null)
             {
