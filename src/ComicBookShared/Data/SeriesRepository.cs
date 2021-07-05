@@ -29,13 +29,18 @@ namespace ComicBookShared.Data
             if (includeRelatedEntities)
             {
                 series = series
-                    .Include(s => s.ComicBooks)
-                    .OrderBy(s => s.Id);
+                    .Include(s => s.ComicBooks);
             }
 
             return series
                 .Where(s => s.Id == id)
                 .SingleOrDefault();
+        }
+
+        public bool SeriesHasTitle(int seriesId, string title)
+        {
+            return Context.Series
+                .Any(s => s.Id != seriesId && s.Title == title);
         }
     }
 }

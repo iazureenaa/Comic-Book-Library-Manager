@@ -34,7 +34,6 @@ namespace ComicBookLibraryManagerWebApp.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            // TODO Get the series.
             var series = _seriesRepository.Get((int)id);
 
             if (series == null)
@@ -78,8 +77,7 @@ namespace ComicBookLibraryManagerWebApp.Controllers
             }
 
             // TODO Get the series.
-            //var series = _seriesRepository.Get((int)id, includeRelatedEntities: false);
-            var series = _seriesRepository.Get((int)id);
+            var series = _seriesRepository.Get((int)id, includeRelatedEntities: false);
 
             if (series == null)
             {
@@ -143,17 +141,17 @@ namespace ComicBookLibraryManagerWebApp.Controllers
         /// <param name="series">The series to validate.</param>
         private void ValidateSeries(Series series)
         {
-            //// If there aren't any "Title" field validation errors...
-            //if (ModelState.IsValidField("Title"))
-            //{
-            //    // Then make sure that the provided title is unique.
-            //    // TODO Call method to check if the title is available.
-            //    if (false)
-            //    {
-            //        ModelState.AddModelError("Title",
-            //            "The provided Title is in use by another series.");
-            //    }
-            //}
+            // If there aren't any "Title" field validation errors...
+            if (ModelState.IsValidField("Title"))
+            {
+                // Then make sure that the provided title is unique.
+                // TODO Call method to check if the title is available.
+                if (_seriesRepository.SeriesHasTitle(series.Id, series.Title))
+                {
+                    ModelState.AddModelError("Title",
+                        "The provided Title is in use by another series.");
+                }
+            }
         }
     }
 }
